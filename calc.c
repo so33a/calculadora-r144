@@ -2,16 +2,19 @@
 #include <stdlib.h>
 #include <strings.h>
 #define MAX 1000
-struct pilha
-{
-    int t;      /* t é o topo da pilha -- proximo espaco vazio do vetor */
-    int v[MAX]; /* v é o vetor que armazena os elementos da pilha */
+typedef struct no * link;
+struct no{
+    char item;// char para receber ( ou ) tambem
+    link next;
 };
-
-/* Define um novo tipo de dado chamado Pilha que é um ponteiro para "struct pilha". */
+struct pilha{
+    link t;      /* t Ã© o topo da pilha*/
+    //int v[MAX]; /* v Ã© o vetor que armazena os elementos da pilha */
+};
+/* Define um novo tipo de dado chamado Pilha que Ã© um ponteiro para "struct pilha". */
 typedef struct pilha * Pilha;
 
-/* Aloca espaço para armazenar uma nova Pilha */
+/* Aloca espaÃ§o para armazenar uma nova Pilha */
 Pilha novaPilha () {
     Pilha p = malloc(sizeof(*p));
     if (p == NULL)
@@ -22,24 +25,44 @@ Pilha novaPilha () {
     p->t = 0; /* devemos inicializar o topo com 0 */
     return p;
 }
-/* Libera memória de uma dada pilha p */
+/* OperaÃ§Ã£o de inserir novo elemento na pilha */
+void push (Pilha p, char valor) {
+    //p->v[(p->t)++] = valor;
+    link aux = malloc(sizeof(*aux));
+        if (aux == NULL){
+            printf("Algum erro aconteceu !\n");
+            exit(-1);
+        }
+    aux->item = valor;
+    aux->next = p->t;
+    p->t = aux;
+}
+/* OperaÃ§Ã£o de remover um elemento da pilha */
+char pop (Pilha p) {
+    link aux = malloc(sizeof(*aux));
+    if (aux == NULL){
+        printf("Algum erro aconteceu !\n");
+        exit(-1);
+    }
+    aux = p->t;
+    char x = aux->item;
+    p->t = aux->next;
+    free(aux);
+    return x;
+}
+/* Libera memÃ³ria de uma dada pilha p */
 void destroiPilha (Pilha p)
 {
+    while(p->t!=NULL)
+        pop(p);
     free(p);
 }
-/* Operação de inserir novo elemento na pilha */
-void push (Pilha p, int valor) {
-    p->v[(p->t)++] = valor;
+/* OperaÃ§Ã£o para pegar o elemento do topo da pilha*/
+char topo (Pilha p) {
+    return p->t->item;
 }
-/* Operação de remover um elemento da pilha */
-int pop (Pilha p) {
-    return p->v[--(p->t)];
-}
-/* Operação para pegar o elemento do topo da pilha */
-int topo (Pilha p) {
-    return p->v[p->t - 1];
-}
-/* Transforma a notação infixa para a notação posfixa */
+
+/* Transforma a notaÃ§Ã£o infixa para a notaÃ§Ã£o posfixa */
 int infixoParaPosfixo (char * entrada, char * saida, int n)
 {
     Pilha p = novaPilha();
@@ -166,7 +189,7 @@ int calcula ( char * s ) {
 
 
 
-/* Exemplo de utilização */
+/* Exemplo de utilizaÃ§Ã£o */
 int main () {
     char infixo[255] ;
     char posfixo[255];
