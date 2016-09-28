@@ -2,19 +2,20 @@
 #include <stdlib.h>
 #include <strings.h>
 #define MAX 1000
+
 typedef struct no * link;
+
 struct no{
-    char item;// char para receber ( ou ) tambem
+    int item;
     link next;
 };
+
 struct pilha{
-    link t;      /* t é o topo da pilha*/
-    //int v[MAX]; /* v é o vetor que armazena os elementos da pilha */
+    link t;      /* t é o topo da pilha -- proximo espaco vazio do vetor */
 };
-/* Define um novo tipo de dado chamado Pilha que é um ponteiro para "struct pilha". */
+
 typedef struct pilha * Pilha;
 
-/* Aloca espaço para armazenar uma nova Pilha */
 Pilha novaPilha () {
     Pilha p = malloc(sizeof(*p));
     if (p == NULL)
@@ -25,43 +26,31 @@ Pilha novaPilha () {
     p->t = 0; /* devemos inicializar o topo com 0 */
     return p;
 }
+/* Libera memória de uma dada pilha p */
+void destroiPilha (Pilha p){
+    free(p);
+}
 /* Operação de inserir novo elemento na pilha */
-void push (Pilha p, char valor) {
-    //p->v[(p->t)++] = valor;
+void push (Pilha p, int valor) {
     link aux = malloc(sizeof(*aux));
-        if (aux == NULL){
-            printf("Algum erro aconteceu !\n");
-            exit(-1);
-        }
     aux->item = valor;
     aux->next = p->t;
     p->t = aux;
 }
 /* Operação de remover um elemento da pilha */
-char pop (Pilha p) {
+int pop (Pilha p) {
     link aux = malloc(sizeof(*aux));
-    if (aux == NULL){
-        printf("Algum erro aconteceu !\n");
-        exit(-1);
-    }
+    int x;
     aux = p->t;
-    char x = aux->item;
+    x = aux->item;
     p->t = aux->next;
     free(aux);
     return x;
 }
-/* Libera memória de uma dada pilha p */
-void destroiPilha (Pilha p)
-{
-    while(p->t!=NULL)
-        pop(p);
-    free(p);
-}
-/* Operação para pegar o elemento do topo da pilha*/
-char topo (Pilha p) {
+/* Operação para pegar o elemento do topo da pilha */
+int topo (Pilha p) {
     return p->t->item;
 }
-
 /* Transforma a notação infixa para a notação posfixa */
 int infixoParaPosfixo (char * entrada, char * saida, int n)
 {
@@ -128,12 +117,8 @@ int bemEncaixado (char* s) {
     int resultado = 1;
     for(i = 0; s[i] != '\0'; i++) {
         if(s[i] == '(') {
-            if(p->t >= MAX) {
-                resultado = 0;
-                break;
-            }
             push(p, 1);
-        } else if (s[i] == ')') {
+        }else if (s[i] == ')') {
             if(p->t <= 0) {
                 resultado = 0;
                 break;
